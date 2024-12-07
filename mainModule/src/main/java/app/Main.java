@@ -1,10 +1,10 @@
 package app;
 
-import emotiveModule.Blackboard;
-import headSim.Blackboard;
-import headSim.Publisher;
-import headSim.TheSubscriber;
-import headSim.TheSubscriberMQTT;
+//import emotiveModule.Blackboard;
+//import headSim.Blackboard;
+//import headSim.Publisher;
+//import headSim.TheSubscriber;
+//import headSim.TheSubscriberMQTT;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +48,7 @@ public class Main extends JFrame {
 		TrackArea area = new TrackArea(server, dropdownMenu, ScreenController.getInstance());
 		add(area, BorderLayout.CENTER);
 
-		EyeController c = new EyeController(area, server, dropdownMenu);
+		CanvasController c = new CanvasController(area, server, dropdownMenu);
 		dropdownMenu.addActionListener(c);
 
 		ScreenController.getInstance().setDrawingState("Updated TrackArea");

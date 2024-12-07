@@ -1,13 +1,14 @@
 package app;
 
-import headSim.Blackboard;
-import headSim.Publisher;
+//import headSim.Blackboard;
+//import headSim.Publisher;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 
 
 /**
@@ -23,10 +24,7 @@ import java.beans.PropertyChangeListener;
  */
 public class TrackArea extends JPanel implements PropertyChangeListener {
 
-	private int leftX = 315;
-	private int leftY = 215;
-	private int rightX = 465;
-	private int rightY = 215;
+	private ArrayList<Point> points = new ArrayList<>();
 	private int latestX, latestY;
 	private String drawingState;
 
@@ -42,7 +40,7 @@ public class TrackArea extends JPanel implements PropertyChangeListener {
 		setVisible(true);
 		setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 
-		EyeController c = new EyeController(this, server, menu);
+		CanvasController c = new CanvasController(this, server, menu);
 		addMouseMotionListener(c);
 		Border blackLine = BorderFactory.createLineBorder(Color.BLACK, 5);
 		setBorder(blackLine);
@@ -54,75 +52,25 @@ public class TrackArea extends JPanel implements PropertyChangeListener {
 		Blackboard.getInstance().addPropertyChangeListener(new DataPointListener(this));
 	}
 
-	/**
-	 * Constrains a point (x, y) to be within a circle defined by its center and radius.
-	 *
-	 * @param x The x-coordinate of the point.
-	 * @param y The y-coordinate of the point.
-	 * @param centerX The x-coordinate of the circle's center.
-	 * @param centerY The y-coordinate of the circle's center.
-	 * @param radius The radius of the circle.
-	 * @return An array containing the constrained x and y coordinates.
-	 */
-	private int[] constrainToCircle(int x, int y, int centerX, int centerY, int radius) {
-		int dx = x - centerX;
-		int dy = y - centerY;
-		double distance = Math.sqrt(dx * dx + dy * dy);
-		if (distance <= radius) {
-			return new int[]{x, y};
-		}
-		double ratio = radius / distance;
-		int constrainedX = centerX + (int) (dx * ratio);
-		int constrainedY = centerY + (int) (dy * ratio);
-		return new int[]{constrainedX, constrainedY};
+	public void draw(int x, int y){
+		points.add(new Point(x,y));
+
 	}
 
-	/**
-	 * Moves the pupils of the eyes based on the mouse position.
-	 *
-	 * @param x The x-coordinate of the mouse.
-	 * @param y The y-coordinate of the mouse.
-	 */
-	public void moveEyes(int x, int y) {
-		int leftEyeCenterX = 275 + 50;
-		int leftEyeCenterY = 175 + 50;
-		int rightEyeCenterX = 425 + 50;
-		int rightEyeCenterY = 175 + 50;
-		int eyeRadius = 50;
-
-		int[] constrainedLeftPupil = constrainToCircle(x, y, leftEyeCenterX, leftEyeCenterY, eyeRadius - 10);
-		leftX = constrainedLeftPupil[0] - 10;
-		leftY = constrainedLeftPupil[1] - 10;
-
-		int[] constrainedRightPupil = constrainToCircle(x, y, rightEyeCenterX, rightEyeCenterY, eyeRadius - 10);
-		rightX = constrainedRightPupil[0] - 10;
-		rightY = constrainedRightPupil[1] - 10;
-		repaint();
-	}
-
-	/**
-	 * Draws the face, eyes, and pupils on the component.
-	 *
-	 * @param g The `Graphics` object used for drawing.
-	 */
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		g.setColor(new Color(255, 233, 0)); // Yellow face color
-		g.fillOval(200, 100, 400, 400); // Face
+		Graphics2D g2d = (Graphics2D) g;
 
-		g.setColor(Color.WHITE);
-		g.fillOval(275, 175, 100, 100); // Left eye
-		g.fillOval(425, 175, 100, 100); // Right eye
+		g2d.setColor(Color.BLACK);
+		g2d.setStroke(new BasicStroke(3));
 
-		g.setColor(Color.WHITE);
-		g.fillOval(275, 350, 250, 50); // Mouth
-
-		g.setColor(Color.BLACK);
-		g.fillOval(leftX, leftY, 20, 20); // Left pupil
-		g.fillOval(rightX, rightY, 20, 20); // Right pupil
-
+		for (int i = 1; i < points.size(); i++) {
+			Point p1 = points.get(i - 1);
+			Point p2 = points.get(i);
+			g.drawLine(p1.x, p1.y, p2.x, p2.y);
+		}
 		// Display latest point and drawing state
 		g.setColor(Color.BLACK);
 		g.drawString("Latest Point: (" + latestX + ", " + latestY + ")", 50, 50);
