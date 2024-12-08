@@ -1,3 +1,5 @@
+package dataTools;
+
 import org.eclipse.paho.client.mqttv3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,9 +8,9 @@ import java.util.Map;
 
 
 /**
- * The `TheSubscriberMQTT` class implements an MQTT subscriber that connects to an MQTT
+ * The `dataTools.TheSubscriberMQTT` class implements an MQTT subscriber that connects to an MQTT
  * broker, subscribes to specified topics, and receives messages. It then forwards these
- * messages to a `DataDestination` for processing, adding a prefix to identify the
+ * messages to a `dataTools.DataDestination` for processing, adding a prefix to identify the
  * source of the data.
  *
  * @author Ashton
@@ -28,12 +30,12 @@ public class TheSubscriberMQTT implements Runnable, MqttCallback {
     private boolean running = true;
 
     /**
-     * Constructs a `TheSubscriberMQTT` object.
+     * Constructs a `dataTools.TheSubscriberMQTT` object.
      *
      * @param broker The address of the MQTT broker.
      * @param clientID The unique ID of the MQTT client.
      * @param topicAndPrefixPairs A map of topics to subscribe to and their corresponding prefixes.
-     * @param destination The `DataDestination` where received messages will be sent.
+     * @param destination The `dataTools.DataDestination` where received messages will be sent.
      * @throws MqttException If an error occurs during connection or subscription.
      */
     public TheSubscriberMQTT(String broker, String clientID, Map<String, String> topicAndPrefixPairs, DataDestination destination) throws MqttException {

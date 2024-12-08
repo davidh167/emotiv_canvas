@@ -1,3 +1,5 @@
+package dataTools;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -6,8 +8,8 @@ import java.io.IOException;
 import java.net.Socket;
 
 /**
- * The `TheSubscriber` class establishes a TCP connection to a server and continuously
- * receives data, which it then forwards to a `DataDestination` for processing. It
+ * The `dataTools.TheSubscriber` class establishes a TCP connection to a server and continuously
+ * receives data, which it then forwards to a `dataTools.DataDestination` for processing. It
  * prepends a predefined prefix to the received data to identify its source.
  *
  * @author Ashton
@@ -25,12 +27,12 @@ public class TheSubscriber implements Runnable{
     private boolean running = true;
 
     /**
-     * Constructs a `TheSubscriber`.
+     * Constructs a `dataTools.TheSubscriber`.
      *
      * @param ip_host The IP address of the server.
      * @param ip_port The port number of the server.
      * @param dataPrefix The prefix to be added to the received data.
-     * @param destination The `DataDestination` where data will be sent.
+     * @param destination The `dataTools.DataDestination` where data will be sent.
      * @throws IOException If an error occurs during socket creation or connection.
      */
     public TheSubscriber(String ip_host, int ip_port, String dataPrefix, DataDestination destination) throws IOException {
@@ -46,7 +48,7 @@ public class TheSubscriber implements Runnable{
     }
 
     /**
-     * Continuously receives data from the server and forwards it to the `DataDestination`.
+     * Continuously receives data from the server and forwards it to the `dataTools.DataDestination`.
      */
     @Override
     public void run() {

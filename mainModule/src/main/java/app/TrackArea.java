@@ -3,6 +3,9 @@ package app;
 //import headSim.Blackboard;
 //import headSim.Publisher;
 
+import dataTools.Publisher;
+import dataTools.Blackboard;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
