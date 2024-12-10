@@ -1,7 +1,7 @@
 package dataTools;
 
 /**
- * The `dataTools.DataDestination` interface defines methods for handling data and error messages
+ * The `DataDestination` interface defines methods for handling data and error messages
  * received from subscribers. Classes that implement this interface can be used as
  * destinations for data received from various sources.
  */

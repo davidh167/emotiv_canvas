@@ -8,9 +8,9 @@ import java.util.Map;
 
 
 /**
- * The `dataTools.TheSubscriberMQTT` class implements an MQTT subscriber that connects to an MQTT
+ * The `TheSubscriberMQTT` class implements an MQTT subscriber that connects to an MQTT
  * broker, subscribes to specified topics, and receives messages. It then forwards these
- * messages to a `dataTools.DataDestination` for processing, adding a prefix to identify the
+ * messages to a `DataDestination` for processing, adding a prefix to identify the
  * source of the data.
  *
  * @author Ashton
@@ -29,20 +29,23 @@ public class TheSubscriberMQTT implements Runnable, MqttCallback {
     private static final String PREFIX_DELIMITER = "~";
     private boolean running = true;
 
+    private MqttClient client;
+
+
     /**
-     * Constructs a `dataTools.TheSubscriberMQTT` object.
+     * Constructs a `TheSubscriberMQTT` object.
      *
      * @param broker The address of the MQTT broker.
      * @param clientID The unique ID of the MQTT client.
      * @param topicAndPrefixPairs A map of topics to subscribe to and their corresponding prefixes.
-     * @param destination The `dataTools.DataDestination` where received messages will be sent.
+     * @param destination The `DataDestination` where received messages will be sent.
      * @throws MqttException If an error occurs during connection or subscription.
      */
     public TheSubscriberMQTT(String broker, String clientID, Map<String, String> topicAndPrefixPairs, DataDestination destination) throws MqttException {
         this.topicAndPrefixPairs = topicAndPrefixPairs;
         this.dataDestination = destination;
         try {
-            MqttClient client = new MqttClient(broker, clientID);
+            client = new MqttClient(broker, clientID);
             client.setCallback(this);
             client.connect();
             log.info("Connected to broker: " + broker);
@@ -83,6 +86,19 @@ public class TheSubscriberMQTT implements Runnable, MqttCallback {
     @Override
     public void connectionLost(Throwable throwable) {
         log.warn("Connection lost: " + throwable.getMessage());
+        while (!client.isConnected()) {
+            try {
+                client.connect();
+                log.info("Reconnected to broker.");
+            } catch (MqttException e) {
+                log.error("Reconnection failed, retrying in 3 seconds...");
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
     }
 
     /**
@@ -114,5 +130,22 @@ public class TheSubscriberMQTT implements Runnable, MqttCallback {
      */
     public void stopSubscriber() {
         running = false;
+        try {
+            if (client != null && client.isConnected()) {
+                client.disconnect();
+                log.info("MQTT client disconnected successfully.");
+            }
+        } catch (MqttException e) {
+            log.warn("Error while disconnecting MQTT client: " + e.getMessage());
+        } finally {
+            try {
+                if (client != null) {
+                    client.close();
+                    log.info("MQTT client closed successfully.");
+                }
+            } catch (MqttException e) {
+                log.warn("Error while closing MQTT client: " + e.getMessage());
+            }
+        }
     }
 }

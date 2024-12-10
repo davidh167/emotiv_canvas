@@ -6,7 +6,8 @@ import org.json.JSONObject;
 
 /**
  * EmotivDelegate follows CortexAPI protocol to set up a connection
- * 
+ *
+ * From code orignally forked from CSC570 git repo by javiergs
  * @author javiersgs
  * @version 0.1
  * @see <a href="https://emotiv.gitbook.io/cortex-api/">Cortex API</a>

@@ -35,9 +35,9 @@ public class TrackArea extends JPanel implements PropertyChangeListener {
 	 *
 	 * @param server The server managing the WebSocket connection.
 	 * @param menu The dropdown menu for controlling the simulation.
-	 * @param blackboard The `Blackboard` object for displaying status information.
+	 * @param screen_controller The `ScreenController` object for displaying status information.
 	 */
-	public TrackArea(Publisher server, JComboBox<String> menu, ScreenController blackboard) {
+	public TrackArea(Publisher server, JComboBox<String> menu, ScreenController screen_controller) {
 		setSize(800, 500);
 		setVisible(true);
 		setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
@@ -48,10 +48,11 @@ public class TrackArea extends JPanel implements PropertyChangeListener {
 		setBorder(blackLine);
 
 		// Register as a listener for property changes from the Blackboard
-		blackboard.addPropertyChangeListener(this);
-		this.drawingState = blackboard.getDrawingState();
+		screen_controller.addPropertyChangeListener(this);
+		this.drawingState = screen_controller.getDrawingState();
 
 		Blackboard.getInstance().addPropertyChangeListener(new DataPointListener(this));
+//		Blackboard.getInstance().addPropertyChangeListener(new EmotivListener(this));
 	}
 
 	public void draw(int x, int y){

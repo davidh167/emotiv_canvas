@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 /**
- * The `dataTools.TheSubscriber` class establishes a TCP connection to a server and continuously
+ * The `TheSubscriber` class establishes a TCP connection to a server and continuously
  * receives data, which it then forwards to a `dataTools.DataDestination` for processing. It
  * prepends a predefined prefix to the received data to identify its source.
  *
