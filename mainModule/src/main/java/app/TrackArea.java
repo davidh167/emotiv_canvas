@@ -1,8 +1,5 @@
 package app;
 
-//import headSim.Blackboard;
-//import headSim.Publisher;
-
 import dataTools.Publisher;
 import dataTools.Blackboard;
 
@@ -30,6 +27,8 @@ public class TrackArea extends JPanel implements PropertyChangeListener {
 	private ArrayList<Point> points = new ArrayList<>();
 	private int latestX, latestY;
 	private String drawingState;
+	private static Color color = new Color(0,0,0);
+
 
 	/**
 	 * Constructs a `TrackArea` object.
@@ -60,14 +59,31 @@ public class TrackArea extends JPanel implements PropertyChangeListener {
 
 	}
 
+	public static void changeColor(String emotion){
+		switch (emotion){
+			case "Happy":
+				color = Color.GREEN;
+				break;
+			case "Bored":
+				color = Color.YELLOW;
+				break;
+			case "Angry":
+				color = Color.RED;
+				break;
+			case "Excited":
+				color = Color.BLUE;
+				break;
+		}
+	}
+
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
 		Graphics2D g2d = (Graphics2D) g;
+		g2d.setStroke(new BasicStroke(5));
 
-		g2d.setColor(Color.BLACK);
-		g2d.setStroke(new BasicStroke(3));
+		g2d.setColor(color);
 
 		for (int i = 1; i < points.size(); i++) {
 			Point p1 = points.get(i - 1);
