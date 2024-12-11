@@ -26,6 +26,8 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
     private Map<String, Object> dataStore = new HashMap<>();
     private static Blackboard instance;
     private static final Logger logger = LoggerFactory.getLogger(Blackboard.class);
+    private int currentIndex = 0;
+
 
     public static Blackboard getInstance() {
         if (instance == null) {
@@ -48,8 +50,12 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
     // Method to add eye tracking data (still applicable)
     public void addPoint(int[] newPoint) {
         int[][] points = getData("eye_tracking_points", int[][].class);
-        int currentIndex = points.length % 10;
+        if (points == null) {
+            points = new int[10][2];
+        }
+        currentIndex = points.length % 10;
         points[currentIndex] = newPoint;
+        currentIndex = (currentIndex + 1) % points.length;
         addData("eye_tracking_points", points);
     }
 

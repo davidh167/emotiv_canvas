@@ -45,6 +45,7 @@ public class Main extends JFrame {
 
 		String fileName = "filtered_output.csv"; // File located in src/main/resources
 
+		server = new Publisher();
 
 		setLayout(new BorderLayout());
 
@@ -70,7 +71,7 @@ public class Main extends JFrame {
 		// If we should start in testing mode (Emotiv data simulation)
 		if (mqttPubInstantiate) {
 			// Create and initialize the publisher
-			ThePublisherMQTT publisher = new ThePublisherMQTT(brokerUrl, "emotiv508"); // Replace with actual MQTT client
+			ThePublisherMQTT publisher = new ThePublisherMQTT(brokerUrl, publishID); // Replace with actual MQTT client
 			EmotivSim sim = new EmotivSim(fileName, publisher);
 
 			// Run simulation in a separate thread
