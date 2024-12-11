@@ -15,7 +15,6 @@ public class EmotionProcessing {
 
     public void EmotionProcessing() {
         logger.info("Emotion processing started");
-
     }
 
     public void process(String topic, MqttMessage mqttMessage){
@@ -37,8 +36,8 @@ public class EmotionProcessing {
 
             Blackboard.getInstance().addEmotionalState(emotion);
 
-            // Optionally, forward the emotion or log it
-            System.out.println("Detected Emotion: " + emotion);
+//            // Optionally, forward the emotion or log it
+//            System.out.println("Detected Emotion: " + emotion);
         } catch (Exception e) {
             e.printStackTrace();
         }

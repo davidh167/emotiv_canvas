@@ -10,6 +10,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * The `TrackArea` class is a visual component that displays a face with eyes that
@@ -27,7 +30,8 @@ public class TrackArea extends JPanel implements PropertyChangeListener {
 	private ArrayList<Point> points = new ArrayList<>();
 	private int latestX, latestY;
 	private String drawingState;
-	private static Color color = new Color(0,0,0);
+	private Color color = new Color(0,0,0);
+	private final Logger log = LoggerFactory.getLogger(TrackArea.class);
 
 
 	/**
@@ -60,7 +64,7 @@ public class TrackArea extends JPanel implements PropertyChangeListener {
 
 	}
 
-	public static void changeColor(String emotion){
+	public void changeColor(String emotion){
 		switch (emotion){
 			case "Happy":
 				color = Color.GREEN;
@@ -125,9 +129,18 @@ public class TrackArea extends JPanel implements PropertyChangeListener {
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
+//		log.debug(evt.getPropertyName());
+//		System.out.println("EVT" + evt);
+
 		if ("drawingState".equals(evt.getPropertyName())) {
 			this.drawingState = (String) evt.getNewValue();
 			repaint();
 		}
+
+		if("emotional_state".equals(evt.getPropertyName())){
+			this.changeColor(evt.getNewValue().toString());
+			repaint();
+		}
+
 	}
 }

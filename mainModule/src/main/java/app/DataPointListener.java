@@ -28,7 +28,7 @@ public class DataPointListener implements PropertyChangeListener {
      */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if ("newPoint".equals(evt.getPropertyName())) {
+        if ("eye_tracking_points".equals(evt.getPropertyName())) {
             int[] point = (int[]) evt.getNewValue();
             trackArea.updateLatestPoint(point[0], point[1]);
         }

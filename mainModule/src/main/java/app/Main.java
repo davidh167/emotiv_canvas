@@ -2,6 +2,7 @@ package app;
 
 import dataTools.Blackboard;
 import dataTools.Publisher;
+import dataTools.TheSubscriber;
 import dataTools.ThePublisherMQTT;
 import dataTools.TheSubscriberMQTT;
 import emotivClient.EmotivSim;
@@ -27,6 +28,7 @@ import java.util.Map;
  */
 public class Main extends JFrame {
 
+	private TheSubscriber tcpSubscriber;
 	private Publisher server;
 	private ThePublisherMQTT mqtt_pub;
 	private TheSubscriberMQTT subscriber;
@@ -64,7 +66,7 @@ public class Main extends JFrame {
 		ScreenController.getInstance().setDrawingState("Updated TrackArea");
 
 		// Defaults for now
-		subscriberType = "tcp";
+		subscriberType = "mqtt";
 		mqttPubInstantiate = true;
 
 
@@ -77,6 +79,17 @@ public class Main extends JFrame {
 			// Run simulation in a separate thread
 			Thread simThread = new Thread(sim);
 			simThread.start();
+		}
+
+		try {
+			String ipHost = "127.0.0.1"; // Example IP, replace with actual if needed
+			int port = 9090;             // Example port, replace with actual if needed
+			String dataPrefix = "PointData";
+			tcpSubscriber = new TheSubscriber(ipHost, port, dataPrefix, Blackboard.getInstance());
+			new Thread(subscriber).start();
+			logger.info("TheSubscriber initialized and started.");
+		} catch (IOException e) {
+			logger.error("Failed to initialize TheSubscriber: " + e.getMessage());
 		}
 
 

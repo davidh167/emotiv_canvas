@@ -59,7 +59,7 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
         addData("eye_tracking_points", points);
     }
 
-    // Method to add ArrayList<JSONArray> data
+    // Method to add String data
     public void addEmotionalState(String emotionalState) {
         logger.info("Added new emotional state: {}", emotionalState);
         addData("emotional_state", emotionalState);
