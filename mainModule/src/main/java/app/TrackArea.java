@@ -95,6 +95,15 @@ public class TrackArea extends JPanel implements PropertyChangeListener {
 		g.setColor(Color.BLACK);
 		g.drawString("Latest Point: (" + latestX + ", " + latestY + ")", 50, 50);
 		g.drawString("Drawing State: " + drawingState, 50, 70);
+		g.fillRect(45,80, 50, 80);
+		g.setColor(Color.green);
+		g.drawString("Happy", 50, 90);
+		g.setColor(Color.yellow);
+		g.drawString("Bored", 50, 110);
+		g.setColor(Color.red);
+		g.drawString("Angry", 50, 130);
+		g.setColor(Color.blue);
+		g.drawString("Excited", 50, 150);
 	}
 
 	/**
