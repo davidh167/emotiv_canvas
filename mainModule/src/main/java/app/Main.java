@@ -4,6 +4,7 @@ import dataTools.Blackboard;
 import dataTools.Publisher;
 import dataTools.ThePublisherMQTT;
 import dataTools.TheSubscriberMQTT;
+import emotivClient.EmotivSim;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,10 +37,14 @@ public class Main extends JFrame {
 	/**
 	 * Constructs the main application window and initializes components.
 	 */
-	public Main() {
+	public Main() throws MqttException {
 
-		String broker = "tcp://test.mosquitto.org:1883";
+		String brokerUrl = "tcp://test.mosquitto.org:1883";
 		String clientID = "myClientCSC508";
+		String publishID = "emotiv508";
+
+		String fileName = "filtered_output.csv"; // File located in src/main/resources
+
 
 		setLayout(new BorderLayout());
 
@@ -57,8 +62,6 @@ public class Main extends JFrame {
 
 		ScreenController.getInstance().setDrawingState("Updated TrackArea");
 
-		Blackboard destination = Blackboard.getInstance();
-
 		// Defaults for now
 		subscriberType = "tcp";
 		mqttPubInstantiate = true;
@@ -66,18 +69,20 @@ public class Main extends JFrame {
 
 		// If we should start in testing mode (Emotiv data simulation)
 		if (mqttPubInstantiate) {
+			// Create and initialize the publisher
+			ThePublisherMQTT publisher = new ThePublisherMQTT(brokerUrl, "emotiv508"); // Replace with actual MQTT client
+			EmotivSim sim = new EmotivSim(fileName, publisher);
 
+			// Run simulation in a separate thread
+			Thread simThread = new Thread(sim);
+			simThread.start();
 		}
 
 
 		if (subscriberType.equals("mqtt")) {
-
-			// Define topic and prefix pairs
-			Map<String, String> topicAndPrefixPairs = new HashMap<>();
-			topicAndPrefixPairs.put("device/coords", "XY");
 			try {
 				// Instantiate the subscriber
-				TheSubscriberMQTT subscriber = new TheSubscriberMQTT(broker, clientID, topicAndPrefixPairs, destination);
+				TheSubscriberMQTT subscriber = new TheSubscriberMQTT(brokerUrl, clientID, "emotiv/data");
 
 				// Run the subscriber in a separate thread
 				Thread subscriberThread = new Thread(subscriber);
@@ -98,7 +103,7 @@ public class Main extends JFrame {
 	 *
 	 * @param args Command line arguments.
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws MqttException {
 		Main main = new Main();
 		main.setTitle("Eye Tracker Simulator");
 		main.setSize(800, 600);

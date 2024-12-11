@@ -54,8 +54,9 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
     }
 
     // Method to add ArrayList<JSONArray> data
-    public void addJsonArrayList(ArrayList<JSONArray> jsonArrayList) {
-        addData("emotional_state", jsonArrayList);
+    public void addEmotionalState(String emotionalState) {
+        logger.info("Added new emotional state: {}", emotionalState);
+        addData("emotional_state", emotionalState);
     }
 
     // General method to retrieve data from the blackboard

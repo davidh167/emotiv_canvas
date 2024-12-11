@@ -6,8 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import emotivClient.EmotionProcessing;
 
-import java.util.Map;
-
 
 /**
  * The `TheSubscriberMQTT` class implements an MQTT subscriber that connects to an MQTT
@@ -20,44 +18,38 @@ import java.util.Map;
  * @author Anthony C.
  * @version 1.0
  */
-
 public class TheSubscriberMQTT implements Runnable, MqttCallback {
 
     private final Logger log = LoggerFactory.getLogger(TheSubscriberMQTT.class.getName());
-    private final Map<String, String> topicAndPrefixPairs;
-    private final DataDestination dataDestination;
-
     private static final String MQTT_PREFIX = "MQTTE";
     private static final String PREFIX_DELIMITER = "~";
     private boolean running = true;
 
-    private EmotionProcessing emotionProcessing;
-
+    private EmotionProcessing emotionProcessor;
     private MqttClient client;
 
+    // Single topic to subscribe to
+    private final String topic;
 
     /**
      * Constructs a `TheSubscriberMQTT` object.
      *
      * @param broker The address of the MQTT broker.
      * @param clientID The unique ID of the MQTT client.
-     * @param topicAndPrefixPairs A map of topics to subscribe to and their corresponding prefixes.
-     * @param destination The `DataDestination` where received messages will be sent.
+     * @param topic The topic to subscribe to.
      * @throws MqttException If an error occurs during connection or subscription.
      */
-    public TheSubscriberMQTT(String broker, String clientID, Map<String, String> topicAndPrefixPairs, DataDestination destination) throws MqttException {
-        this.topicAndPrefixPairs = topicAndPrefixPairs;
-        this.dataDestination = destination;
-//        this
+    public TheSubscriberMQTT(String broker, String clientID, String topic) throws MqttException {
+        this.topic = topic;
+        this.emotionProcessor = new EmotionProcessing();
+
         try {
             client = new MqttClient(broker, clientID);
             client.setCallback(this);
             client.connect();
             log.info("Connected to broker: " + broker);
-            for (String topic : topicAndPrefixPairs.keySet()){
-                client.subscribe(topic);
-                log.info("Subscribed to topic: " + topic);
-            }
+            client.subscribe(topic);
+            log.info("Subscribed to topic: " + topic);
         } catch (MqttException e) {
             log.warn("Unable to connect to broker --" + e.getMessage());
             throw e;
@@ -70,14 +62,11 @@ public class TheSubscriberMQTT implements Runnable, MqttCallback {
     @Override
     public void run() {
         try {
-            //keep the thread alive and idle while waiting for new data
+            // Keep the thread alive and idle while waiting for new data
             while (running) {
                 Thread.sleep(1000);
             }
         } catch (InterruptedException e) {
-            String mqttErrorPrefixWithDelim = MQTT_PREFIX + PREFIX_DELIMITER ;
-            dataDestination.alertError(mqttErrorPrefixWithDelim +
-                    e.getMessage());
             log.warn("Thread was interrupted", e);
             Thread.currentThread().interrupt();
         }
@@ -107,24 +96,16 @@ public class TheSubscriberMQTT implements Runnable, MqttCallback {
     }
 
     /**
-     * Called when a message arrives at a subscribed topic.
+     * Called when a message arrives at the subscribed topic.
      *
      * @param topic The topic the message was received on.
      * @param mqttMessage The received message.
      */
     @Override
     public void messageArrived(String topic, MqttMessage mqttMessage) {
-//        dataDestination.addSubscriberData(topicAndPrefixPairs.get(topic) +
-//                PREFIX_DELIMITER + mqttMessage);
-
-
-
-//        dataDestination.getIns
-
-
-
-        log.debug("Message Arrived. Topic: " + topic +
-                " Message: " + new String(mqttMessage.getPayload()));
+        // Here you can add code to process the message, for example:
+        emotionProcessor.process(topic, mqttMessage);
+        log.info("Message arrived. Topic: " + topic + " Message: " + new String(mqttMessage.getPayload()));
     }
 
     /**

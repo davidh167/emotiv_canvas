@@ -33,9 +33,11 @@ public class ForwardingSocket extends EmotivSocket {
     String fileSuffix = String.valueOf(LocalDateTime.now()).replaceAll(":", "-").replaceAll("\\.", "_");
 
 
-    public ForwardingSocket(URI serverURI, EmotivDelegate delegate, ThePublisherMQTT mqttPublisher) throws Exception {
+    public ForwardingSocket(URI serverURI, EmotivDelegate delegate) throws Exception {
         super(serverURI, delegate);
-        this.mqttPublisher = mqttPublisher;
+        String broker = "tcp://test.mosquitto.org:1883";
+        String clientID = "emotivForwardingSocket";
+        this.mqttPublisher = new ThePublisherMQTT(broker, clientID);
     }
 
 
