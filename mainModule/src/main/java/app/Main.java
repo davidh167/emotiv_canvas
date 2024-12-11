@@ -2,7 +2,7 @@ package app;
 
 import dataTools.Blackboard;
 import dataTools.Publisher;
-import dataTools.TheSubscriber;
+import dataTools.ThePublisherMQTT;
 import dataTools.TheSubscriberMQTT;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.slf4j.Logger;
@@ -27,15 +27,20 @@ import java.util.Map;
 public class Main extends JFrame {
 
 	private Publisher server;
-	private TheSubscriber subscriber;
+	private ThePublisherMQTT mqtt_pub;
+	private TheSubscriberMQTT subscriber;
 	private static final Logger logger = LoggerFactory.getLogger(Main.class);
 	private String subscriberType;
+	private boolean mqttPubInstantiate;
 
 	/**
 	 * Constructs the main application window and initializes components.
 	 */
 	public Main() {
-		server = new Publisher();
+
+		String broker = "tcp://test.mosquitto.org:1883";
+		String clientID = "myClientCSC508";
+
 		setLayout(new BorderLayout());
 
 		JPanel dropdownPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -54,26 +59,18 @@ public class Main extends JFrame {
 
 		Blackboard destination = Blackboard.getInstance();
 
-		// Default for now
+		// Defaults for now
 		subscriberType = "tcp";
+		mqttPubInstantiate = true;
 
 
-		if (subscriberType.equals("tcp")) {
-			// Initialize TheSubscriber
-			try {
-				String ipHost = "127.0.0.1"; // Example IP, replace with actual if needed
-				int port = 9090;             // Example port, replace with actual if needed
-				String dataPrefix = "PointData";
-				subscriber = new TheSubscriber(ipHost, port, dataPrefix, Blackboard.getInstance());
-				new Thread(subscriber).start();
-				logger.info("TheSubscriber initialized and started.");
-			} catch (IOException e) {
-				logger.error("Failed to initialize TheSubscriber: " + e.getMessage());
-			}
+		// If we should start in testing mode (Emotiv data simulation)
+		if (mqttPubInstantiate) {
 
-		} else if (subscriberType.equals("mqtt")) {
-			String broker = "tcp://broker.hivemq.com:1883";
-			String clientID = "SubscriberClient";
+		}
+
+
+		if (subscriberType.equals("mqtt")) {
 
 			// Define topic and prefix pairs
 			Map<String, String> topicAndPrefixPairs = new HashMap<>();

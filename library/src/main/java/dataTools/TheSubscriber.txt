@@ -9,7 +9,7 @@ import java.net.Socket;
 
 /**
  * The `TheSubscriber` class establishes a TCP connection to a server and continuously
- * receives data, which it then forwards to a `dataTools.DataDestination` for processing. It
+ * receives data, which it then forwards to a `DataDestination` for processing. It
  * prepends a predefined prefix to the received data to identify its source.
  *
  * @author Ashton
@@ -27,7 +27,7 @@ public class TheSubscriber implements Runnable{
     private boolean running = true;
 
     /**
-     * Constructs a `dataTools.TheSubscriber`.
+     * Constructs a `TheSubscriber`.
      *
      * @param ip_host The IP address of the server.
      * @param ip_port The port number of the server.

@@ -1,12 +1,16 @@
 package dataTools;
 
+import org.json.JSONArray;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyChangeSupport;
 
 /**
- * The `dataTools.Blackboard` class acts as a central hub for storing and managing eye tracking data.
+ * The `Blackboard` class acts as a central hub for storing and managing eye tracking data.
  * It maintains a history of the last 10 eye positions and notifies any registered observers (like
  * the `TrackArea`) whenever a new data point is added. This allows for real-time updates of the
  * visualization.
@@ -18,8 +22,8 @@ import java.beans.PropertyChangeSupport;
  */
 public class Blackboard extends PropertyChangeSupport implements DataDestination {
 
-    private int[][] points = new int[10][2];
-    private int currentIndex = 0;
+    // New data storage structure
+    private Map<String, Object> dataStore = new HashMap<>();
     private static Blackboard instance;
     private static final Logger logger = LoggerFactory.getLogger(Blackboard.class);
 
@@ -34,16 +38,34 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
         super(new Object());
     }
 
+    // Generalized method to add or update data
+    public <T> void addData(String key, T value) {
+        Object oldValue = dataStore.put(key, value);
+        firePropertyChange(key, oldValue, value);
+        logger.debug("Data added/updated under key '{}': {}", key, value);
+    }
+
+    // Method to add eye tracking data (still applicable)
     public void addPoint(int[] newPoint) {
-        int[] oldPoint = points[currentIndex];
+        int[][] points = getData("eye_tracking_points", int[][].class);
+        int currentIndex = points.length % 10;
         points[currentIndex] = newPoint;
-        currentIndex = (currentIndex + 1) % points.length;
-        firePropertyChange("newPoint", oldPoint, points[(currentIndex - 1 + points.length) % points.length]);
-        logger.debug("New point added to repository: {}", newPoint);
+        addData("eye_tracking_points", points);
+    }
+
+    // Method to add ArrayList<JSONArray> data
+    public void addJsonArrayList(ArrayList<JSONArray> jsonArrayList) {
+        addData("emotional_state", jsonArrayList);
+    }
+
+    // General method to retrieve data from the blackboard
+    public <T> T getData(String key, Class<T> type) {
+        return type.cast(dataStore.get(key));
     }
 
     @Override
     public void addSubscriberData(String data) {
+        // Handle received data (assumed to be in some format, e.g., "x~y" for points)
         String[] parts = data.split("~");
         if (parts.length == 2) {
             try {

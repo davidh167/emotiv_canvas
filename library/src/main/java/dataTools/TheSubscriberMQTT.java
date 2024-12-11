@@ -4,6 +4,8 @@ import org.eclipse.paho.client.mqttv3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import emotivClient.EmotionProcessing;
+
 import java.util.Map;
 
 
@@ -29,6 +31,8 @@ public class TheSubscriberMQTT implements Runnable, MqttCallback {
     private static final String PREFIX_DELIMITER = "~";
     private boolean running = true;
 
+    private EmotionProcessing emotionProcessing;
+
     private MqttClient client;
 
 
@@ -44,6 +48,7 @@ public class TheSubscriberMQTT implements Runnable, MqttCallback {
     public TheSubscriberMQTT(String broker, String clientID, Map<String, String> topicAndPrefixPairs, DataDestination destination) throws MqttException {
         this.topicAndPrefixPairs = topicAndPrefixPairs;
         this.dataDestination = destination;
+//        this
         try {
             client = new MqttClient(broker, clientID);
             client.setCallback(this);
@@ -109,8 +114,15 @@ public class TheSubscriberMQTT implements Runnable, MqttCallback {
      */
     @Override
     public void messageArrived(String topic, MqttMessage mqttMessage) {
-        dataDestination.addSubscriberData(topicAndPrefixPairs.get(topic) +
-                PREFIX_DELIMITER + mqttMessage);
+//        dataDestination.addSubscriberData(topicAndPrefixPairs.get(topic) +
+//                PREFIX_DELIMITER + mqttMessage);
+
+
+
+//        dataDestination.getIns
+
+
+
         log.debug("Message Arrived. Topic: " + topic +
                 " Message: " + new String(mqttMessage.getPayload()));
     }
