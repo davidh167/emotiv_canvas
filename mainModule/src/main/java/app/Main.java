@@ -81,17 +81,6 @@ public class Main extends JFrame {
 			simThread.start();
 		}
 
-		try {
-			String ipHost = "127.0.0.1"; // Example IP, replace with actual if needed
-			int port = 9090;             // Example port, replace with actual if needed
-			String dataPrefix = "PointData";
-			tcpSubscriber = new TheSubscriber(ipHost, port, dataPrefix, Blackboard.getInstance());
-			new Thread(subscriber).start();
-			logger.info("TheSubscriber initialized and started.");
-		} catch (IOException e) {
-			logger.error("Failed to initialize TheSubscriber: " + e.getMessage());
-		}
-
 
 		if (subscriberType.equals("mqtt")) {
 			try {
