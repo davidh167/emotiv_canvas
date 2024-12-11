@@ -17,6 +17,7 @@ import java.net.Socket;
  * @author Anthony C.
  * @version 1.0
  */
+
 public class TheSubscriber implements Runnable{
 
     private final Logger log = LoggerFactory.getLogger(TheSubscriber.class.getName());

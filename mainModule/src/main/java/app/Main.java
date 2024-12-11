@@ -56,43 +56,7 @@ public class Main extends JFrame {
 
 		// Default for now
 		subscriberType = "tcp";
-
-
-		if (subscriberType.equals("tcp")) {
-			// Initialize TheSubscriber
-			try {
-				String ipHost = "127.0.0.1"; // Example IP, replace with actual if needed
-				int port = 9090;             // Example port, replace with actual if needed
-				String dataPrefix = "PointData";
-				subscriber = new TheSubscriber(ipHost, port, dataPrefix, Blackboard.getInstance());
-				new Thread(subscriber).start();
-				logger.info("TheSubscriber initialized and started.");
-			} catch (IOException e) {
-				logger.error("Failed to initialize TheSubscriber: " + e.getMessage());
-			}
-
-		} else if (subscriberType.equals("mqtt")) {
-			String broker = "tcp://broker.hivemq.com:1883";
-			String clientID = "SubscriberClient";
-
-			// Define topic and prefix pairs
-			Map<String, String> topicAndPrefixPairs = new HashMap<>();
-			topicAndPrefixPairs.put("device/coords", "XY");
-			try {
-				// Instantiate the subscriber
-				TheSubscriberMQTT subscriber = new TheSubscriberMQTT(broker, clientID, topicAndPrefixPairs, destination);
-
-				// Run the subscriber in a separate thread
-				Thread subscriberThread = new Thread(subscriber);
-				subscriberThread.start();
-				logger.info("TheSubscriber initialized and started.");
-
-			} catch (MqttException e) {
-				System.out.println("An error occurred while initializing the subscriber: " + e.getMessage());
-			}
-		}else{
-			logger.error("Unknown subscriber type");
-		}
+		
 
 	}
 
