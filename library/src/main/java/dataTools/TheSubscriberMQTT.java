@@ -104,7 +104,8 @@ public class TheSubscriberMQTT implements Runnable, MqttCallback {
     @Override
     public void messageArrived(String topic, MqttMessage mqttMessage) {
         // Here you can add code to process the message, for example:
-        emotionProcessor.process(topic, mqttMessage);
+        EmotionProcessing emo = new EmotionProcessing();
+        emo.process(topic, mqttMessage);
         log.info("Message arrived. Topic: " + topic + " Message: " + new String(mqttMessage.getPayload()));
     }
 

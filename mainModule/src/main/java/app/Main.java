@@ -1,8 +1,5 @@
 package app;
 
-import dataTools.Blackboard;
-import dataTools.Publisher;
-import dataTools.TheSubscriber;
 import dataTools.ThePublisherMQTT;
 import dataTools.TheSubscriberMQTT;
 import emotivClient.EmotivSim;
@@ -12,9 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * The `Main` class is the entry point of the eye tracking simulation application. It sets up
@@ -28,8 +22,8 @@ import java.util.Map;
  */
 public class Main extends JFrame {
 
-	private TheSubscriber tcpSubscriber;
-	private Publisher server;
+//	private TheSubscriber tcpSubscriber;
+//	private Publisher server;
 	private ThePublisherMQTT mqtt_pub;
 	private TheSubscriberMQTT subscriber;
 	private static final Logger logger = LoggerFactory.getLogger(Main.class);
@@ -47,7 +41,7 @@ public class Main extends JFrame {
 
 		String fileName = "filtered_output.csv"; // File located in src/main/resources
 
-		server = new Publisher();
+//		server = new Publisher();
 
 		setLayout(new BorderLayout());
 
@@ -57,10 +51,10 @@ public class Main extends JFrame {
 		dropdownPanel.add(dropdownMenu);
 		add(dropdownPanel, BorderLayout.NORTH);
 
-		TrackArea area = new TrackArea(server, dropdownMenu, ScreenController.getInstance());
+		TrackArea area = new TrackArea(dropdownMenu, ScreenController.getInstance());
 		add(area, BorderLayout.CENTER);
 
-		CanvasController c = new CanvasController(area, server, dropdownMenu);
+		CanvasController c = new CanvasController(area, dropdownMenu);
 		dropdownMenu.addActionListener(c);
 
 		ScreenController.getInstance().setDrawingState("Updated TrackArea");
@@ -73,8 +67,8 @@ public class Main extends JFrame {
 		// If we should start in testing mode (Emotiv data simulation)
 		if (mqttPubInstantiate) {
 			// Create and initialize the publisher
-			ThePublisherMQTT publisher = new ThePublisherMQTT(brokerUrl, publishID); // Replace with actual MQTT client
-			EmotivSim sim = new EmotivSim(fileName, publisher);
+			mqtt_pub = new ThePublisherMQTT(brokerUrl, publishID); // Replace with actual MQTT client
+			EmotivSim sim = new EmotivSim(fileName, mqtt_pub);
 
 			// Run simulation in a separate thread
 			Thread simThread = new Thread(sim);
@@ -90,7 +84,7 @@ public class Main extends JFrame {
 				// Run the subscriber in a separate thread
 				Thread subscriberThread = new Thread(subscriber);
 				subscriberThread.start();
-				logger.info("TheSubscriber initialized and started.");
+				logger.info("Subscriber initialized and started.");
 
 			} catch (MqttException e) {
 				System.out.println("An error occurred while initializing the subscriber: " + e.getMessage());
@@ -123,7 +117,7 @@ public class Main extends JFrame {
 		super.dispose();
 		if (subscriber != null) {
 			subscriber.stopSubscriber();
-			logger.info("TheSubscriber stopped.");
+			logger.info("Subscriber stopped.");
 		}
 	}
 }

@@ -43,20 +43,20 @@ public class Blackboard extends PropertyChangeSupport implements DataDestination
     // Generalized method to add or update data
     public <T> void addData(String key, T value) {
         Object oldValue = dataStore.put(key, value);
+        logger.info("Data added/updated under key '{}': {}", key, value);
         firePropertyChange(key, oldValue, value);
-        logger.debug("Data added/updated under key '{}': {}", key, value);
     }
 
     // Method to add eye tracking data (still applicable)
     public void addPoint(int[] newPoint) {
-        int[][] points = getData("eye_tracking_points", int[][].class);
-        if (points == null) {
-            points = new int[10][2];
-        }
-        currentIndex = points.length % 10;
-        points[currentIndex] = newPoint;
-        currentIndex = (currentIndex + 1) % points.length;
-        addData("eye_tracking_points", points);
+//        int[][] points = getData("eye_tracking_points", int[][].class);
+//        if (points == null) {
+//            points = new int[10][2];
+//        }
+//        currentIndex = points.length % 10;
+//        points[currentIndex] = newPoint;
+//        currentIndex = (currentIndex + 1) % points.length;
+        addData("eye_tracking_points", newPoint);
     }
 
     // Method to add String data

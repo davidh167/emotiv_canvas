@@ -1,6 +1,5 @@
 package app;
 
-import dataTools.Publisher;
 import dataTools.Blackboard;
 
 import javax.swing.*;
@@ -37,16 +36,15 @@ public class TrackArea extends JPanel implements PropertyChangeListener {
 	/**
 	 * Constructs a `TrackArea` object.
 	 *
-	 * @param server The server managing the WebSocket connection.
 	 * @param menu The dropdown menu for controlling the simulation.
 	 * @param screen_controller The `ScreenController` object for displaying status information.
 	 */
-	public TrackArea(Publisher server, JComboBox<String> menu, ScreenController screen_controller) {
+	public TrackArea(JComboBox<String> menu, ScreenController screen_controller) {
 		setSize(800, 500);
 		setVisible(true);
 		setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 
-		CanvasController c = new CanvasController(this, server, menu);
+		CanvasController c = new CanvasController(this, menu);
 		addMouseMotionListener(c);
 		Border blackLine = BorderFactory.createLineBorder(Color.BLACK, 5);
 		setBorder(blackLine);
@@ -65,20 +63,22 @@ public class TrackArea extends JPanel implements PropertyChangeListener {
 	}
 
 	public void changeColor(String emotion){
+		log.info("Change Emotion to: " + emotion);
 		switch (emotion){
-			case "Happy":
+			case "happy":
 				color = Color.GREEN;
 				break;
-			case "Bored":
+			case "bored":
 				color = Color.YELLOW;
 				break;
-			case "Angry":
+			case "angry":
 				color = Color.RED;
 				break;
-			case "Excited":
+			case "excited":
 				color = Color.BLUE;
 				break;
 		}
+		repaint();
 	}
 
 	@Override
@@ -134,11 +134,6 @@ public class TrackArea extends JPanel implements PropertyChangeListener {
 
 		if ("drawingState".equals(evt.getPropertyName())) {
 			this.drawingState = (String) evt.getNewValue();
-			repaint();
-		}
-
-		if("emotional_state".equals(evt.getPropertyName())){
-			this.changeColor(evt.getNewValue().toString());
 			repaint();
 		}
 
