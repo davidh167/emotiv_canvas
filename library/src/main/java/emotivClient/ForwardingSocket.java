@@ -58,7 +58,6 @@ public class ForwardingSocket extends EmotivSocket {
                 BigDecimal time = new JSONObject(message).getBigDecimal("time");
                 JSONObject object = new JSONObject(message);
                 System.out.println(object);
-        //            System.out.println(time);
                 JSONArray array = null;
                 if ((object.keySet()).contains("fac")) {
                     array = object.getJSONArray("fac");
@@ -70,7 +69,6 @@ public class ForwardingSocket extends EmotivSocket {
                     array = object.getJSONArray("mot");
                 }
 
-                // if fac refers to facial expression, and met refers to mental state, what does dev refer to?
                 System.out.println(time + " :: " + array);
 
                 if (array != null) {

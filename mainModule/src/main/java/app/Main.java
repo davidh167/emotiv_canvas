@@ -22,8 +22,6 @@ import java.awt.*;
  */
 public class Main extends JFrame {
 
-//	private TheSubscriber tcpSubscriber;
-//	private Publisher server;
 	private ThePublisherMQTT mqtt_pub;
 	private TheSubscriberMQTT subscriber;
 	private static final Logger logger = LoggerFactory.getLogger(Main.class);
@@ -40,8 +38,6 @@ public class Main extends JFrame {
 		String publishID = "emotiv508";
 
 		String fileName = "filtered_output.csv"; // File located in src/main/resources
-
-//		server = new Publisher();
 
 		setLayout(new BorderLayout());
 

@@ -7,6 +7,15 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ *
+ * The 'EmotionProcessing' class is used to process the parameters returned by the Emotiv Insight.
+ * These are the six values, engagement, focus, excitement, relaxation, stress, and interest
+ *
+ * @author David H.
+ * @author Ashton A.
+ * @author Anthony C. fdcv
+ */
 
 public class EmotionProcessing {
 

@@ -54,7 +54,6 @@ public class TrackArea extends JPanel implements PropertyChangeListener {
 		this.drawingState = screen_controller.getDrawingState();
 
 		Blackboard.getInstance().addPropertyChangeListener(new DataPointListener(this));
-//		Blackboard.getInstance().addPropertyChangeListener(new EmotivListener(this));
 	}
 
 	public void draw(int x, int y){
@@ -129,9 +128,6 @@ public class TrackArea extends JPanel implements PropertyChangeListener {
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-//		log.debug(evt.getPropertyName());
-//		System.out.println("EVT" + evt);
-
 		if ("drawingState".equals(evt.getPropertyName())) {
 			this.drawingState = (String) evt.getNewValue();
 			repaint();

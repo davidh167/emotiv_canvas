@@ -33,9 +33,6 @@ public class DataPointListener implements PropertyChangeListener {
      */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-//        log.debug(evt.getPropertyName());
-//		System.out.println("EVT" + evt);
-
         if ("eye_tracking_points".equals(evt.getPropertyName())) {
             Object x = evt.getNewValue();
             int[] point = (int[]) x;
