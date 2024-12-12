@@ -1,6 +1,5 @@
 package app;
 
-import dataTools.Publisher;
 import dataTools.Blackboard;
 
 import javax.swing.*;
@@ -9,6 +8,9 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -27,22 +29,22 @@ public class TrackArea extends JPanel implements PropertyChangeListener {
 	private ArrayList<Point> points = new ArrayList<>();
 	private int latestX, latestY;
 	private String drawingState;
-	private static Color color = new Color(0,0,0);
+	private Color color = new Color(0,0,0);
+	private final Logger log = LoggerFactory.getLogger(TrackArea.class);
 
 
 	/**
 	 * Constructs a `TrackArea` object.
 	 *
-	 * @param server The server managing the WebSocket connection.
 	 * @param menu The dropdown menu for controlling the simulation.
 	 * @param screen_controller The `ScreenController` object for displaying status information.
 	 */
-	public TrackArea(Publisher server, JComboBox<String> menu, ScreenController screen_controller) {
+	public TrackArea(JComboBox<String> menu, ScreenController screen_controller) {
 		setSize(800, 500);
 		setVisible(true);
 		setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 
-		CanvasController c = new CanvasController(this, server, menu);
+		CanvasController c = new CanvasController(this, menu);
 		addMouseMotionListener(c);
 		Border blackLine = BorderFactory.createLineBorder(Color.BLACK, 5);
 		setBorder(blackLine);
@@ -52,7 +54,6 @@ public class TrackArea extends JPanel implements PropertyChangeListener {
 		this.drawingState = screen_controller.getDrawingState();
 
 		Blackboard.getInstance().addPropertyChangeListener(new DataPointListener(this));
-//		Blackboard.getInstance().addPropertyChangeListener(new EmotivListener(this));
 	}
 
 	public void draw(int x, int y){
@@ -60,21 +61,23 @@ public class TrackArea extends JPanel implements PropertyChangeListener {
 
 	}
 
-	public static void changeColor(String emotion){
+	public void changeColor(String emotion){
+		log.info("Change Emotion to: " + emotion);
 		switch (emotion){
-			case "Happy":
+			case "happy":
 				color = Color.GREEN;
 				break;
-			case "Bored":
+			case "bored":
 				color = Color.YELLOW;
 				break;
-			case "Angry":
+			case "angry":
 				color = Color.RED;
 				break;
-			case "Excited":
+			case "excited":
 				color = Color.BLUE;
 				break;
 		}
+		repaint();
 	}
 
 	@Override
@@ -129,5 +132,6 @@ public class TrackArea extends JPanel implements PropertyChangeListener {
 			this.drawingState = (String) evt.getNewValue();
 			repaint();
 		}
+
 	}
 }
