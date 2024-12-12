@@ -6,6 +6,7 @@ import emotivClient.*;
  * Main class to run the Emotiv WebSocket client.
  *
  *  @author David Hernandez
+ * @author javiergs
  *  @version 0.1
  */
 public class Main {
