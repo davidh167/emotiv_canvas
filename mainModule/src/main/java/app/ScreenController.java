@@ -4,7 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 /**
- * The `Blackboard` class acts as a central communication hub for managing and
+ * The `ScreenController` class acts as a central communication hub for managing and
  * notifying observers about changes in the drawing state of the `TrackArea`.
  * It follows the Observer pattern using `PropertyChangeSupport`.
  *
