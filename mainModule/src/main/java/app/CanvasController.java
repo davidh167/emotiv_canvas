@@ -1,6 +1,5 @@
 package app;
 
-import dataTools.Publisher;
 import dataTools.Blackboard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,21 +24,19 @@ import java.awt.event.MouseMotionListener;
 public class CanvasController implements MouseMotionListener, ActionListener {
 
 	private TrackArea trackArea;
-	private Publisher server;
+
 	private JComboBox<String> menu;
-	private boolean init_connected = false;
+	private static boolean drawingToggle = false; // Enables and disbles drawing.
 	private static final Logger logger = LoggerFactory.getLogger(CanvasController.class);
 
 	/**
 	 * Constructs a `EyeController`.
 	 *
 	 * @param trackArea The `TrackArea` where eye movements are visualized.
-	 * @param server The `Server` that manages the WebSocket connection.
 	 * @param menu The dropdown menu for controlling the server (Start/Stop).
 	 */
-	public CanvasController(TrackArea trackArea, Publisher server, JComboBox<String> menu) {
+	public CanvasController(TrackArea trackArea, JComboBox<String> menu) {
 		this.trackArea = trackArea;
-		this.server = server;
 		this.menu = menu;
 		Blackboard.getInstance().addPropertyChangeListener(new DataPointListener(trackArea));
 	}
@@ -51,7 +48,7 @@ public class CanvasController implements MouseMotionListener, ActionListener {
 	 */
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		if (server.isRunning()) {
+		if (drawingToggle) {
 			int x = e.getX();
 			int y = e.getY();
 			trackArea.draw(x, y);
@@ -79,10 +76,10 @@ public class CanvasController implements MouseMotionListener, ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		String selectedAction = (String) menu.getSelectedItem();
 		if (selectedAction.equals("Start")) {
-			server.start();
+			drawingToggle = true;
 			logger.info("app.library.Server started by user action.");
 		} else if (selectedAction.equals("Stop")) {
-			server.stop();
+			drawingToggle = false;
 			logger.info("app.library.Server stopped by user action.");
 		}
 	}
